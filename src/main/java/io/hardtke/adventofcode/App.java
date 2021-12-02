@@ -12,7 +12,8 @@ public class App {
 
         long startTime = System.currentTimeMillis();
 
-        new Day_01();
+        //new Day_01();
+        new Day_02();
 
         System.out.printf("Time: %dms", System.currentTimeMillis() - startTime);
 
