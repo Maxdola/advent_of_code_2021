@@ -86,47 +86,57 @@ public class Day_04 extends Day {
     for (List<String> rawBoard : rawBoards) {
       Bingo b = new Bingo(rawBoard);
       boards.add(b);
-      System.out.println("adding");
     }
-
-    List<Integer> lasWinningNumbers = null;
-    Bingo lastWinner = null;
 
     x : for (int i = 0; i < drawnNumbers.size(); i++) {
       List<Integer> currentNumbers = new LinkedList<>(drawnNumbers.subList(0, i));
-      Bingo remove = null;
       for (Bingo board : boards) {
         if (board.checkIfWon(currentNumbers)) {
-          //System.out.println(boards.size());
+          System.out.println("Solution 1:");
           System.out.println(currentNumbers);
           board.print();
           int sum = board.getAllNumbersBut(currentNumbers).stream().mapToInt(Integer::valueOf).sum();
-          System.out.println(sum);
           System.out.println(sum*currentNumbers.get(currentNumbers.size() - 1));
-          if (boards.size() == 1) {
-            break x;
-          } else {
-            lasWinningNumbers = currentNumbers;
-            lastWinner = board;
-            remove = board;
-          }
+          System.out.println();
+          System.out.println();
+          break x;
         }
       }
-      if (remove != null) boards.remove(remove);
     }
 
-    if (lastWinner != null) {
-      System.out.println("LastWinner:");
-      System.out.println(lasWinningNumbers);
-      lastWinner.print();
-      int sum = lastWinner.getAllNumbersBut(lasWinningNumbers).stream().mapToInt(Integer::valueOf).sum();
-      System.out.println(sum);
-      System.out.println(sum*lasWinningNumbers.get(lasWinningNumbers.size() - 1));
+    class WinInfo {
+      private Bingo bingo;
+      private List<Integer> numbers;
+
+      WinInfo(Bingo bingo, List<Integer> numbers) {
+        this.bingo = bingo;
+        this.numbers = numbers;
+      }
+
+      int calculateWinInfo() {
+        return this.bingo.getAllNumbersBut(this.numbers).stream().mapToInt(Integer::valueOf).sum()*this.numbers.get(this.numbers.size() - 1);
+      }
     }
 
-  }
+    Map<Integer, WinInfo> winners = new HashMap<>();
 
-  private void calc2(int pos, StringBuilder most, StringBuilder least) {
+    for (int i = 0; i < drawnNumbers.size(); i++) {
+      List<Integer> currentNumbers = new LinkedList<>(drawnNumbers.subList(0, i));
+      List<Bingo> remove = new ArrayList<>();
+      for (Bingo board : boards) {
+        if (board.checkIfWon(currentNumbers)) {
+          remove.add(board);
+          winners.put(winners.size(), new WinInfo(board, currentNumbers));
+        }
+      }
+      boards.removeAll(remove);
+    }
+
+    System.out.println("Solution 2:");
+
+    WinInfo wi = winners.get(winners.size() - 1);
+    wi.bingo.print();
+    System.out.println("Num: " + wi.calculateWinInfo());
 
   }
 
