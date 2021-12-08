@@ -24,7 +24,6 @@ public class Day_07 extends Day {
         cheapestI = i;
         cost = s;
       }
-      //System.out.printf("%2d: %3d%n", i, calcCost(subs, i));
     }
 
     System.out.printf("Cheapest %d -> %d %n", cheapestI, cost);
